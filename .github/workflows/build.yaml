@@ -1,0 +1,91 @@
+name: Build
+on:
+  schedule:
+    - cron: "00 20 * * *"
+  workflow_dispatch:
+env:
+  GH_TOKEN: ${{ github.token }}
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+      - name: Set up Git
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global advice.detachedHead false
+      - name: Transform proto to java
+        run: |
+          release_status="0"
+          release_version="$(date "+%Y%m%d%H%M%S")"
+          protoc_tag_version="v3.25.2"
+          protoc_version="3.25.2"
+          curl -sL "https://repo1.maven.org/maven2/com/google/protobuf/protoc/$protoc_version/protoc-$protoc_version-linux-x86_64.exe" -o protoc
+          sudo chmod +x protoc
+          protoc_gen_grpc_java_version="1.61.0"
+          curl -sL "https://repo1.maven.org/maven2/io/grpc/protoc-gen-grpc-java/$protoc_gen_grpc_java_version/protoc-gen-grpc-java-$protoc_gen_grpc_java_version-linux-x86_64.exe" -o protoc-gen-grpc-java
+          sudo chmod +x protoc-gen-grpc-java
+          xray_version="$(curl -sL https://api.github.com/repos/XTLS/Xray-core/releases/latest | jq -r '.tag_name')"
+          if [ ! -f xray-version ] || [ "$(cat xray-version)" != "$xray_version" ]; then
+            echo "$xray_version" > xray-version
+            git add xray-version
+            git commit -m "Bump Xray-core to $xray_version"
+            release_status="1"
+          fi
+          v2ray_version="$(curl -sL https://api.github.com/repos/v2fly/v2ray-core/releases/latest | jq -r '.tag_name')"
+          if [ ! -f v2ray-version ] || [ "$(cat v2ray-version)" != "$v2ray_version" ]; then
+            echo "$v2ray_version" > v2ray-version
+            git add v2ray-version
+            git commit -m "Bump v2ray-core to $v2ray_version"
+            release_status="1"
+          fi
+          geosite_version="$(curl -sL https://api.github.com/repos/v2fly/domain-list-community/releases/latest | jq -r '.tag_name')"
+          if [ ! -f geosite-version ] || [ "$(cat geosite-version)" != "$geosite_version" ]; then
+            echo "$geosite_version" > geosite-version
+            git add geosite-version
+            git commit -m "Bump geosite to $geosite_version"
+            release_status="1"
+          fi
+          geoip_version="$(curl -sL https://api.github.com/repos/v2fly/geoip/releases/latest | jq -r '.tag_name')"
+          if [ ! -f geoip-version ] || [ "$(cat geoip-version)" != "$geoip_version" ]; then
+            echo "$geoip_version" > geoip-version
+            git add geoip-version
+            git commit -m "Bump geoip to $geoip_version"
+            release_status="1"
+          fi
+          repo_version="$(curl -sL https://api.github.com/repos/maoxikun/ray-data-for-java/releases/latest | jq -r '.tag_name')"
+          if [ "$release_status" == "1" ] || [ "$repo_version" == "null" ]; then
+            git push
+            mkdir "$release_version"
+            curl -sL https://github.com/XTLS/Xray-core/releases/latest/download/Xray-windows-64.zip -o "$release_version/Xray-windows-64.zip"
+            curl -sL https://github.com/XTLS/Xray-core/releases/latest/download/Xray-windows-arm64-v8a.zip -o "$release_version/Xray-windows-arm64-v8a.zip"
+            curl -sL https://github.com/XTLS/Xray-core/releases/latest/download/Xray-linux-64.zip -o "$release_version/Xray-linux-64.zip"
+            curl -sL https://github.com/XTLS/Xray-core/releases/latest/download/Xray-linux-arm64-v8a.zip -o "$release_version/Xray-linux-arm64-v8a.zip"
+            curl -sL https://github.com/XTLS/Xray-core/releases/latest/download/Xray-macos-64.zip -o "$release_version/Xray-macos-64.zip"
+            curl -sL https://github.com/XTLS/Xray-core/releases/latest/download/Xray-macos-arm64-v8a.zip -o "$release_version/Xray-macos-arm64-v8a.zip"
+            curl -sL https://github.com/v2fly/v2ray-core/releases/latest/download/v2ray-windows-64.zip -o "$release_version/v2ray-windows-64.zip"
+            curl -sL https://github.com/v2fly/v2ray-core/releases/latest/download/v2ray-windows-arm64-v8a.zip -o "$release_version/v2ray-windows-arm64-v8a.zip"
+            curl -sL https://github.com/v2fly/v2ray-core/releases/latest/download/v2ray-linux-64.zip -o "$release_version/v2ray-linux-64.zip"
+            curl -sL https://github.com/v2fly/v2ray-core/releases/latest/download/v2ray-linux-arm64-v8a.zip -o "$release_version/v2ray-linux-arm64-v8a.zip"
+            curl -sL https://github.com/v2fly/v2ray-core/releases/latest/download/v2ray-macos-64.zip -o "$release_version/v2ray-macos-64.zip"
+            curl -sL https://github.com/v2fly/v2ray-core/releases/latest/download/v2ray-macos-arm64-v8a.zip -o "$release_version/v2ray-macos-arm64-v8a.zip"
+            mkdir "$release_version/Xray-data"
+            git clone -b "$xray_version" https://github.com/XTLS/Xray-core.git
+            find Xray-core -type f -name *.proto -exec ./protoc --proto_path=Xray-core --plugin=protoc-gen-grpc-java=./protoc-gen-grpc-java --grpc-java_out="$release_version/Xray-data" --java_out="$release_version/Xray-data" {} \;
+            git clone -b "$protoc_tag_version" https://github.com/protocolbuffers/protobuf.git
+            mkdir "$release_version/v2ray-data"
+            git clone -b "$v2ray_version" https://github.com/v2fly/v2ray-core.git
+            find v2ray-core -type f -name *.proto -exec ./protoc --proto_path=v2ray-core --proto_path=protobuf/src --plugin=protoc-gen-grpc-java=./protoc-gen-grpc-java --grpc-java_out="$release_version/v2ray-data" --java_out="$release_version/v2ray-data" {} \;
+            mkdir "$release_version/geo-data"
+            curl -sL https://github.com/v2fly/domain-list-community/releases/latest/download/dlc.dat -o "$release_version/geo-data/geosite.dat"
+            curl -sL https://github.com/v2fly/geoip/releases/latest/download/geoip.dat -o "$release_version/geo-data/geoip.dat"
+            if [[ "$(ls -A "$release_version/Xray-data")" && "$(ls -A "$release_version/v2ray-data")" && "$(ls -A "$release_version/geo-data")" ]]; then
+              cd "$release_version" && zip -q -r Xray-data.zip Xray-data && cd ..
+              cd "$release_version" && zip -q -r v2ray-data.zip v2ray-data && cd ..
+              cd "$release_version" && zip -q -r geo-data.zip geo-data && cd ..
+              gh release create "$release_version" --generate-notes "$release_version"/*.zip
+            fi
+          fi
+
