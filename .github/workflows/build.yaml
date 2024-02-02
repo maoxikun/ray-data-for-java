@@ -65,7 +65,7 @@ jobs:
             curl -sL https://github.com/v2fly/v2ray-core/releases/latest/download/v2ray-macos-64.zip -o "$release_version/v2ray-macos-64.zip"
             curl -sL https://github.com/v2fly/v2ray-core/releases/latest/download/v2ray-macos-arm64-v8a.zip -o "$release_version/v2ray-macos-arm64-v8a.zip"
             curl -sL https://github.com/protocolbuffers/protobuf/releases/download/v25.2/protoc-25.2-linux-x86_64.zip -o protobuf.zip
-            unzip protobuf.zip -d protobuf
+            unzip -q protobuf.zip -d protobuf
             sudo chmod +x protobuf/bin/protoc
             curl -sL https://repo1.maven.org/maven2/io/grpc/protoc-gen-grpc-java/1.61.0/protoc-gen-grpc-java-1.61.0-linux-x86_64.exe -o protobuf/bin/protoc-gen-grpc-java
             sudo chmod +x protobuf/bin/protoc-gen-grpc-java
