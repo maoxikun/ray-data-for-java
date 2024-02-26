@@ -22,28 +22,28 @@ jobs:
           release_version="$(date "+%Y%m%d%H%M%S")"
           repo_version="$(curl -sL https://api.github.com/repos/${{ github.repository }}/releases/latest | jq -r '.tag_name')"
           xray_version="$(curl -sL https://api.github.com/repos/XTLS/Xray-core/releases/latest | jq -r '.tag_name')"
-          if [ ! -f xray-version ] || [ "$(cat xray-version)" != "$xray_version" ] || [ "$repo_version" == "null" ]; then
+          if [ ! -f xray-version ] || [ "$repo_version" == "null" ] || [ ! "$xray_version" == "null" ] && [ "$(cat xray-version)" != "$xray_version" ]; then
             echo "$xray_version" > xray-version
             git add xray-version
             git commit -m "Bump Xray-core to $xray_version"
             release_status="1"
           fi
           v2ray_version="$(curl -sL https://api.github.com/repos/v2fly/v2ray-core/releases/latest | jq -r '.tag_name')"
-          if [ ! -f v2ray-version ] || [ "$(cat v2ray-version)" != "$v2ray_version" ] || [ "$repo_version" == "null" ]; then
+          if [ ! -f v2ray-version ] || [ "$repo_version" == "null" ] || [ ! "$v2ray_version" == "null" ] && [ "$(cat v2ray-version)" != "$v2ray_version" ]; then
             echo "$v2ray_version" > v2ray-version
             git add v2ray-version
             git commit -m "Bump v2ray-core to $v2ray_version"
             release_status="1"
           fi
           geosite_version="$(curl -sL https://api.github.com/repos/v2fly/domain-list-community/releases/latest | jq -r '.tag_name')"
-          if [ ! -f geosite-version ] || [ "$(cat geosite-version)" != "$geosite_version" ] || [ "$repo_version" == "null" ]; then
+          if [ ! -f geosite-version ] || [ "$repo_version" == "null" ] || [ ! "$geosite_version" == "null" ] && [ "$(cat geosite-version)" != "$geosite_version" ]; then
             echo "$geosite_version" > geosite-version
             git add geosite-version
             git commit -m "Bump geosite to $geosite_version"
             release_status="1"
           fi
           geoip_version="$(curl -sL https://api.github.com/repos/v2fly/geoip/releases/latest | jq -r '.tag_name')"
-          if [ ! -f geoip-version ] || [ "$(cat geoip-version)" != "$geoip_version" ] || [ "$repo_version" == "null" ]; then
+          if [ ! -f geoip-version ] || [ "$repo_version" == "null" ] || [ ! "$geoip_version" == "null" ] && [ "$(cat geoip-version)" != "$geoip_version" ]; then
             echo "$geoip_version" > geoip-version
             git add geoip-version
             git commit -m "Bump geoip to $geoip_version"
