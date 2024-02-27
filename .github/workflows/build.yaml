@@ -22,28 +22,28 @@ jobs:
           release_version="$(date "+%Y%m%d%H%M%S")"
           repo_version="$(curl -sL https://api.github.com/repos/${{ github.repository }}/releases/latest | jq -r '.tag_name')"
           xray_version="$(curl -sL https://api.github.com/repos/XTLS/Xray-core/releases/latest | jq -r '.tag_name')"
-          if [ ! -f xray-version ] || [ "$repo_version" = "null" ] || [ ! "$xray_version" = "null" ] && [ "$(cat xray-version)" != "$xray_version" ]; then
+          if [ "$repo_version" = "null" ] || [ ! -f xray-version ] || [ "$xray_version" != "null" ] && [ "$xray_version" != "$(cat xray-version)" ]; then
             echo "$xray_version" > xray-version
             git add xray-version
             git commit -m "Bump Xray-core to $xray_version"
             release_status="1"
           fi
           v2ray_version="$(curl -sL https://api.github.com/repos/v2fly/v2ray-core/releases/latest | jq -r '.tag_name')"
-          if [ ! -f v2ray-version ] || [ "$repo_version" = "null" ] || [ ! "$v2ray_version" = "null" ] && [ "$(cat v2ray-version)" != "$v2ray_version" ]; then
+          if [ "$repo_version" = "null" ] || [ ! -f v2ray-version ] || [ "$v2ray_version" != "null" ] && [ "$v2ray_version" != "$(cat v2ray-version)" ]; then
             echo "$v2ray_version" > v2ray-version
             git add v2ray-version
             git commit -m "Bump v2ray-core to $v2ray_version"
             release_status="1"
           fi
           geosite_version="$(curl -sL https://api.github.com/repos/v2fly/domain-list-community/releases/latest | jq -r '.tag_name')"
-          if [ ! -f geosite-version ] || [ "$repo_version" = "null" ] || [ ! "$geosite_version" = "null" ] && [ "$(cat geosite-version)" != "$geosite_version" ]; then
+          if [ "$repo_version" = "null" ] || [ ! -f geosite-version ] || [ "$geosite_version" != "null" ] && [ "$geosite_version" != "$(cat geosite-version)" ]; then
             echo "$geosite_version" > geosite-version
             git add geosite-version
             git commit -m "Bump geosite to $geosite_version"
             release_status="1"
           fi
           geoip_version="$(curl -sL https://api.github.com/repos/v2fly/geoip/releases/latest | jq -r '.tag_name')"
-          if [ ! -f geoip-version ] || [ "$repo_version" = "null" ] || [ ! "$geoip_version" = "null" ] && [ "$(cat geoip-version)" != "$geoip_version" ]; then
+          if [ "$repo_version" = "null" ] || [ ! -f geoip-version ] || [ "$geoip_version" != "null" ] && [ "$geoip_version" != "$(cat geoip-version)" ]; then
             echo "$geoip_version" > geoip-version
             git add geoip-version
             git commit -m "Bump geoip to $geoip_version"
@@ -67,7 +67,7 @@ jobs:
             curl -sL https://github.com/protocolbuffers/protobuf/releases/download/v25.3/protoc-25.3-linux-x86_64.zip -o protobuf.zip
             unzip -q protobuf.zip -d protobuf
             sudo chmod +x protobuf/bin/protoc
-            curl -sL https://repo1.maven.org/maven2/io/grpc/protoc-gen-grpc-java/1.61.1/protoc-gen-grpc-java-1.61.1-linux-x86_64.exe -o protobuf/bin/protoc-gen-grpc-java
+            curl -sL https://repo1.maven.org/maven2/io/grpc/protoc-gen-grpc-java/1.62.2/protoc-gen-grpc-java-1.62.2-linux-x86_64.exe -o protobuf/bin/protoc-gen-grpc-java
             sudo chmod +x protobuf/bin/protoc-gen-grpc-java
             mkdir "$release_version/Xray-data"
             git clone -b "$xray_version" https://github.com/XTLS/Xray-core.git
