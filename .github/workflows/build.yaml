@@ -79,8 +79,8 @@ jobs:
             curl -sL https://github.com/v2fly/domain-list-community/releases/latest/download/dlc.dat -o "$release_version/geo-data/geosite.dat"
             curl -sL https://github.com/v2fly/geoip/releases/latest/download/geoip.dat -o "$release_version/geo-data/geoip.dat"
             if [[ "$(ls -A "$release_version/Xray-data")" && "$(ls -A "$release_version/v2ray-data")" && "$(ls -A "$release_version/geo-data")" ]]; then
-              cd "$release_version" && zip -q -r Xray-data.zip Xray-data && cd ..
-              cd "$release_version" && zip -q -r v2ray-data.zip v2ray-data && cd ..
+              cd "$release_version" && zip -q -r "Xray-data-$xray_version.zip" Xray-data && cd ..
+              cd "$release_version" && zip -q -r "v2ray-data-$v2ray_version.zip" v2ray-data && cd ..
               cd "$release_version" && zip -q -r geo-data.zip geo-data && cd ..
               gh release create "$release_version" --generate-notes "$release_version"/*.zip
             fi
