@@ -52,18 +52,20 @@ jobs:
           if [ "$release_status" = "1" ] || [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
             git push
             mkdir "$release_version"
-            curl -sL https://github.com/XTLS/Xray-core/releases/latest/download/Xray-windows-64.zip -o "$release_version/Xray-windows-64.zip"
-            curl -sL https://github.com/XTLS/Xray-core/releases/latest/download/Xray-windows-arm64-v8a.zip -o "$release_version/Xray-windows-arm64-v8a.zip"
-            curl -sL https://github.com/XTLS/Xray-core/releases/latest/download/Xray-linux-64.zip -o "$release_version/Xray-linux-64.zip"
-            curl -sL https://github.com/XTLS/Xray-core/releases/latest/download/Xray-linux-arm64-v8a.zip -o "$release_version/Xray-linux-arm64-v8a.zip"
-            curl -sL https://github.com/XTLS/Xray-core/releases/latest/download/Xray-macos-64.zip -o "$release_version/Xray-macos-64.zip"
-            curl -sL https://github.com/XTLS/Xray-core/releases/latest/download/Xray-macos-arm64-v8a.zip -o "$release_version/Xray-macos-arm64-v8a.zip"
-            curl -sL https://github.com/v2fly/v2ray-core/releases/latest/download/v2ray-windows-64.zip -o "$release_version/v2ray-windows-64.zip"
-            curl -sL https://github.com/v2fly/v2ray-core/releases/latest/download/v2ray-windows-arm64-v8a.zip -o "$release_version/v2ray-windows-arm64-v8a.zip"
-            curl -sL https://github.com/v2fly/v2ray-core/releases/latest/download/v2ray-linux-64.zip -o "$release_version/v2ray-linux-64.zip"
-            curl -sL https://github.com/v2fly/v2ray-core/releases/latest/download/v2ray-linux-arm64-v8a.zip -o "$release_version/v2ray-linux-arm64-v8a.zip"
-            curl -sL https://github.com/v2fly/v2ray-core/releases/latest/download/v2ray-macos-64.zip -o "$release_version/v2ray-macos-64.zip"
-            curl -sL https://github.com/v2fly/v2ray-core/releases/latest/download/v2ray-macos-arm64-v8a.zip -o "$release_version/v2ray-macos-arm64-v8a.zip"
+            cd "$release_version"
+            curl -sLO https://github.com/XTLS/Xray-core/releases/latest/download/Xray-windows-64.zip
+            curl -sLO https://github.com/XTLS/Xray-core/releases/latest/download/Xray-windows-arm64-v8a.zip
+            curl -sLO https://github.com/XTLS/Xray-core/releases/latest/download/Xray-linux-64.zip
+            curl -sLO https://github.com/XTLS/Xray-core/releases/latest/download/Xray-linux-arm64-v8a.zip
+            curl -sLO https://github.com/XTLS/Xray-core/releases/latest/download/Xray-macos-64.zip
+            curl -sLO https://github.com/XTLS/Xray-core/releases/latest/download/Xray-macos-arm64-v8a.zip
+            curl -sLO https://github.com/v2fly/v2ray-core/releases/latest/download/v2ray-windows-64.zip
+            curl -sLO https://github.com/v2fly/v2ray-core/releases/latest/download/v2ray-windows-arm64-v8a.zip
+            curl -sLO https://github.com/v2fly/v2ray-core/releases/latest/download/v2ray-linux-64.zip
+            curl -sLO https://github.com/v2fly/v2ray-core/releases/latest/download/v2ray-linux-arm64-v8a.zip
+            curl -sLO https://github.com/v2fly/v2ray-core/releases/latest/download/v2ray-macos-64.zip
+            curl -sLO https://github.com/v2fly/v2ray-core/releases/latest/download/v2ray-macos-arm64-v8a.zip
+            cd ..
             curl -sL https://github.com/protocolbuffers/protobuf/releases/download/v25.3/protoc-25.3-linux-x86_64.zip -o protobuf.zip
             unzip -q protobuf.zip -d protobuf
             sudo chmod +x protobuf/bin/protoc
