@@ -53,12 +53,14 @@ jobs:
             git push
             mkdir "$release_version"
             cd "$release_version"
+            curl -sL https://github.com/XTLS/Xray-core/archive/refs/tags/$xray_version.zip -o "Xray-source-$xray_version.zip"
             curl -sLO https://github.com/XTLS/Xray-core/releases/latest/download/Xray-windows-64.zip
             curl -sLO https://github.com/XTLS/Xray-core/releases/latest/download/Xray-windows-arm64-v8a.zip
             curl -sLO https://github.com/XTLS/Xray-core/releases/latest/download/Xray-linux-64.zip
             curl -sLO https://github.com/XTLS/Xray-core/releases/latest/download/Xray-linux-arm64-v8a.zip
             curl -sLO https://github.com/XTLS/Xray-core/releases/latest/download/Xray-macos-64.zip
             curl -sLO https://github.com/XTLS/Xray-core/releases/latest/download/Xray-macos-arm64-v8a.zip
+            curl -sL https://github.com/v2fly/v2ray-core/archive/refs/tags/$v2ray_version.zip -o "v2ray-source-$v2ray_version.zip"
             curl -sLO https://github.com/v2fly/v2ray-core/releases/latest/download/v2ray-windows-64.zip
             curl -sLO https://github.com/v2fly/v2ray-core/releases/latest/download/v2ray-windows-arm64-v8a.zip
             curl -sLO https://github.com/v2fly/v2ray-core/releases/latest/download/v2ray-linux-64.zip
@@ -71,19 +73,19 @@ jobs:
             sudo chmod +x protobuf/bin/protoc
             curl -sL https://repo1.maven.org/maven2/io/grpc/protoc-gen-grpc-java/1.69.0/protoc-gen-grpc-java-1.69.0-linux-x86_64.exe -o protobuf/bin/protoc-gen-grpc-java
             sudo chmod +x protobuf/bin/protoc-gen-grpc-java
-            mkdir "$release_version/Xray-data"
+            mkdir "$release_version/Xray-protobuf"
             git clone -b "$xray_version" https://github.com/XTLS/Xray-core.git
-            find Xray-core -type f -name *.proto -exec protobuf/bin/protoc --plugin=protoc-gen-grpc-java=protobuf/bin/protoc-gen-grpc-java --proto_path=Xray-core --proto_path=protobuf/include --java_out="$release_version/Xray-data" --grpc-java_out="$release_version/Xray-data" {} \;
-            mkdir "$release_version/v2ray-data"
+            find Xray-core -type f -name *.proto -exec protobuf/bin/protoc --plugin=protoc-gen-grpc-java=protobuf/bin/protoc-gen-grpc-java --proto_path=Xray-core --proto_path=protobuf/include --java_out="$release_version/Xray-protobuf" --grpc-java_out="$release_version/Xray-protobuf" {} \;
+            mkdir "$release_version/v2ray-protobuf"
             git clone -b "$v2ray_version" https://github.com/v2fly/v2ray-core.git
-            find v2ray-core -type f -name *.proto -exec protobuf/bin/protoc --plugin=protoc-gen-grpc-java=protobuf/bin/protoc-gen-grpc-java --proto_path=v2ray-core --proto_path=protobuf/include --java_out="$release_version/v2ray-data" --grpc-java_out="$release_version/v2ray-data" {} \;
-            mkdir "$release_version/geo-data"
-            curl -sL https://github.com/v2fly/domain-list-community/releases/latest/download/dlc.dat -o "$release_version/geo-data/geosite.dat"
-            curl -sL https://github.com/v2fly/geoip/releases/latest/download/geoip.dat -o "$release_version/geo-data/geoip.dat"
-            if [[ "$(ls -A "$release_version/Xray-data")" && "$(ls -A "$release_version/v2ray-data")" && "$(ls -A "$release_version/geo-data")" ]]; then
-              cd "$release_version" && zip -q -r "Xray-data-$xray_version.zip" Xray-data && cd ..
-              cd "$release_version" && zip -q -r "v2ray-data-$v2ray_version.zip" v2ray-data && cd ..
-              cd "$release_version" && zip -q -r geo-data.zip geo-data && cd ..
+            find v2ray-core -type f -name *.proto -exec protobuf/bin/protoc --plugin=protoc-gen-grpc-java=protobuf/bin/protoc-gen-grpc-java --proto_path=v2ray-core --proto_path=protobuf/include --java_out="$release_version/v2ray-protobuf" --grpc-java_out="$release_version/v2ray-protobuf" {} \;
+            mkdir "$release_version/geo-assets"
+            curl -sL https://github.com/v2fly/domain-list-community/releases/latest/download/dlc.dat -o "$release_version/geo-assets/geosite.dat"
+            curl -sL https://github.com/v2fly/geoip/releases/latest/download/geoip.dat -o "$release_version/geo-assets/geoip.dat"
+            if [[ "$(ls -A "$release_version/Xray-protobuf")" && "$(ls -A "$release_version/v2ray-protobuf")" && "$(ls -A "$release_version/geo-assets")" ]]; then
+              cd "$release_version" && zip -q -r "Xray-protobuf-$xray_version.zip" Xray-protobuf && cd ..
+              cd "$release_version" && zip -q -r "v2ray-protobuf-$v2ray_version.zip" v2ray-protobuf && cd ..
+              cd "$release_version" && zip -q -r geo-assets.zip geo-assets && cd ..
               gh release create "$release_version" --generate-notes "$release_version"/*.zip
             fi
           fi
