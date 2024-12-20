@@ -53,12 +53,14 @@ jobs:
             git push
             mkdir "$release_version"
             cd "$release_version"
+            curl -sLO https://github.com/XTLS/Xray-core/archive/refs/tags/$(xray_version).zip
             curl -sLO https://github.com/XTLS/Xray-core/releases/latest/download/Xray-windows-64.zip
             curl -sLO https://github.com/XTLS/Xray-core/releases/latest/download/Xray-windows-arm64-v8a.zip
             curl -sLO https://github.com/XTLS/Xray-core/releases/latest/download/Xray-linux-64.zip
             curl -sLO https://github.com/XTLS/Xray-core/releases/latest/download/Xray-linux-arm64-v8a.zip
             curl -sLO https://github.com/XTLS/Xray-core/releases/latest/download/Xray-macos-64.zip
             curl -sLO https://github.com/XTLS/Xray-core/releases/latest/download/Xray-macos-arm64-v8a.zip
+            curl -sLO https://github.com/v2fly/v2ray-core/archive/refs/tags/$(v2ray_version).zip
             curl -sLO https://github.com/v2fly/v2ray-core/releases/latest/download/v2ray-windows-64.zip
             curl -sLO https://github.com/v2fly/v2ray-core/releases/latest/download/v2ray-windows-arm64-v8a.zip
             curl -sLO https://github.com/v2fly/v2ray-core/releases/latest/download/v2ray-linux-64.zip
