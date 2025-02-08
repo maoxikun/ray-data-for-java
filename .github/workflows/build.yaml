@@ -35,18 +35,18 @@ jobs:
             git commit -m "Bump v2ray-core to $v2ray_version"
             release_status="1"
           fi
-          geosite_version="$(curl -sL https://api.github.com/repos/v2fly/domain-list-community/releases/latest | jq -r '.tag_name')"
-          if [ "$repo_version" = "null" ] || [ ! -f geosite-version ] || [ "$geosite_version" != "null" ] && [ "$geosite_version" != "$(cat geosite-version)" ]; then
-            echo "$geosite_version" > geosite-version
-            git add geosite-version
-            git commit -m "Bump geosite to $geosite_version"
-            release_status="1"
-          fi
-          geoip_version="$(curl -sL https://api.github.com/repos/v2fly/geoip/releases/latest | jq -r '.tag_name')"
+          geoip_version="$(curl -sL https://api.github.com/repos/Loyalsoldier/v2ray-rules-dat/releases/latest | jq -r '.tag_name')"
           if [ "$repo_version" = "null" ] || [ ! -f geoip-version ] || [ "$geoip_version" != "null" ] && [ "$geoip_version" != "$(cat geoip-version)" ]; then
             echo "$geoip_version" > geoip-version
             git add geoip-version
             git commit -m "Bump geoip to $geoip_version"
+            release_status="1"
+          fi
+          geosite_version="$(curl -sL https://api.github.com/repos/Loyalsoldier/v2ray-rules-dat/releases/latest | jq -r '.tag_name')"
+          if [ "$repo_version" = "null" ] || [ ! -f geosite-version ] || [ "$geosite_version" != "null" ] && [ "$geosite_version" != "$(cat geosite-version)" ]; then
+            echo "$geosite_version" > geosite-version
+            git add geosite-version
+            git commit -m "Bump geosite to $geosite_version"
             release_status="1"
           fi
           if [ "$release_status" = "1" ] || [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
