@@ -35,14 +35,14 @@ jobs:
             git commit -m "Bump v2ray-core to $v2ray_version"
             release_status="1"
           fi
-          geoip_version="$(curl -sL https://api.github.com/repos/Loyalsoldier/v2ray-rules-dat/releases/latest | jq -r '.tag_name')"
+          geoip_version="$(curl -sL https://api.github.com/repos/v2fly/geoip/releases/latest | jq -r '.tag_name')"
           if [ "$repo_version" = "null" ] || [ ! -f geoip-version ] || [ "$geoip_version" != "null" ] && [ "$geoip_version" != "$(cat geoip-version)" ]; then
             echo "$geoip_version" > geoip-version
             git add geoip-version
             git commit -m "Bump geoip to $geoip_version"
             release_status="1"
           fi
-          geosite_version="$(curl -sL https://api.github.com/repos/Loyalsoldier/v2ray-rules-dat/releases/latest | jq -r '.tag_name')"
+          geosite_version="$(curl -sL https://api.github.com/repos/v2fly/domain-list-community/releases/latest | jq -r '.tag_name')"
           if [ "$repo_version" = "null" ] || [ ! -f geosite-version ] || [ "$geosite_version" != "null" ] && [ "$geosite_version" != "$(cat geosite-version)" ]; then
             echo "$geosite_version" > geosite-version
             git add geosite-version
@@ -80,8 +80,8 @@ jobs:
             git clone -b "$v2ray_version" https://github.com/v2fly/v2ray-core.git
             find v2ray-core -type f -name *.proto -exec protobuf/bin/protoc --plugin=protoc-gen-grpc-java=protobuf/bin/protoc-gen-grpc-java --proto_path=v2ray-core --proto_path=protobuf/include --java_out="$release_version/v2ray-protobuf-$v2ray_version" --grpc-java_out="$release_version/v2ray-protobuf-$v2ray_version" {} \;
             mkdir "$release_version/geo-assets"
-            curl -sL https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geoip.dat -o "$release_version/geo-assets/geoip.dat"
-            curl -sL https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geosite.dat -o "$release_version/geo-assets/geosite.dat"
+            curl -sL https://github.com/v2fly/geoip/releases/latest/download//geoip.dat -o "$release_version/geo-assets/geoip.dat"
+            curl -sL https://github.com/v2fly/domain-list-community/releases/latest/download/dlc.dat -o "$release_version/geo-assets/geosite.dat"
             if [[ "$(ls -A "$release_version/Xray-protobuf-$xray_version")" && "$(ls -A "$release_version/v2ray-protobuf-$v2ray_version")" && "$(ls -A "$release_version/geo-assets")" ]]; then
               cd "$release_version" && zip -q -r "Xray-protobuf-$xray_version.zip" "Xray-protobuf-$xray_version" && cd ..
               cd "$release_version" && zip -q -r "v2ray-protobuf-$v2ray_version.zip" "v2ray-protobuf-$v2ray_version" && cd ..
