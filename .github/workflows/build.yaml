@@ -80,7 +80,7 @@ jobs:
             git clone -b "$v2ray_version" https://github.com/v2fly/v2ray-core.git
             find v2ray-core -type f -name *.proto -exec protobuf/bin/protoc --plugin=protoc-gen-grpc-java=protobuf/bin/protoc-gen-grpc-java --proto_path=v2ray-core --proto_path=protobuf/include --java_out="$release_version/v2ray-protobuf-$v2ray_version" --grpc-java_out="$release_version/v2ray-protobuf-$v2ray_version" {} \;
             mkdir "$release_version/geo-assets"
-            curl -sL https://github.com/v2fly/geoip/releases/latest/download//geoip.dat -o "$release_version/geo-assets/geoip.dat"
+            curl -sL https://github.com/v2fly/geoip/releases/latest/download/geoip.dat -o "$release_version/geo-assets/geoip.dat"
             curl -sL https://github.com/v2fly/domain-list-community/releases/latest/download/dlc.dat -o "$release_version/geo-assets/geosite.dat"
             if [[ "$(ls -A "$release_version/Xray-protobuf-$xray_version")" && "$(ls -A "$release_version/v2ray-protobuf-$v2ray_version")" && "$(ls -A "$release_version/geo-assets")" ]]; then
               cd "$release_version" && zip -q -r "Xray-protobuf-$xray_version.zip" "Xray-protobuf-$xray_version" && cd ..
