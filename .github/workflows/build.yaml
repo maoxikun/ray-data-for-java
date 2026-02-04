@@ -71,7 +71,7 @@ jobs:
             curl -sL https://github.com/protocolbuffers/protobuf/releases/download/v25.8/protoc-25.8-linux-x86_64.zip -o protobuf.zip
             unzip -q protobuf.zip -d protobuf
             sudo chmod +x protobuf/bin/protoc
-            curl -sL https://repo1.maven.org/maven2/io/grpc/protoc-gen-grpc-java/1.78.0/protoc-gen-grpc-java-1.78.0-linux-x86_64.exe -o protobuf/bin/protoc-gen-grpc-java
+            curl -sL https://repo1.maven.org/maven2/io/grpc/protoc-gen-grpc-java/1.79.0/protoc-gen-grpc-java-1.79.0-linux-x86_64.exe -o protobuf/bin/protoc-gen-grpc-java
             sudo chmod +x protobuf/bin/protoc-gen-grpc-java
             mkdir "$release_version/Xray-protobuf-$xray_version"
             git clone -b "$xray_version" https://github.com/XTLS/Xray-core.git
