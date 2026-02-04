@@ -68,17 +68,18 @@ jobs:
             curl -sLO https://github.com/v2fly/v2ray-core/releases/latest/download/v2ray-macos-64.zip
             curl -sLO https://github.com/v2fly/v2ray-core/releases/latest/download/v2ray-macos-arm64-v8a.zip
             cd ..
-            curl -sL https://github.com/protocolbuffers/protobuf/releases/download/v25.8/protoc-25.8-linux-x86_64.zip -o protobuf.zip
-            unzip -q protobuf.zip -d protobuf
-            sudo chmod +x protobuf/bin/protoc
-            curl -sL https://repo1.maven.org/maven2/io/grpc/protoc-gen-grpc-java/1.79.0/protoc-gen-grpc-java-1.79.0-linux-x86_64.exe -o protobuf/bin/protoc-gen-grpc-java
-            sudo chmod +x protobuf/bin/protoc-gen-grpc-java
+            curl -sL https://github.com/protocolbuffers/protobuf/releases/download/v25.8/protoc-25.8-linux-x86_64.zip -o protobuf-v2ray.zip
+            unzip -q protobuf-v2ray.zip -d protobuf-v2ray
+            curl -sL https://github.com/protocolbuffers/protobuf/releases/download/v33.5/protoc-33.5-linux-x86_64.zip -o protobuf-xray.zip
+            unzip -q protobuf-xray.zip -d protobuf-xray
+            curl -sL https://repo1.maven.org/maven2/io/grpc/protoc-gen-grpc-java/1.79.0/protoc-gen-grpc-java-1.79.0-linux-x86_64.exe -o ./protoc-gen-grpc-java
+            sudo chmod +x ./protoc-gen-grpc-java
             mkdir "$release_version/Xray-protobuf-$xray_version"
             git clone -b "$xray_version" https://github.com/XTLS/Xray-core.git
-            find Xray-core -type f -name *.proto -exec protobuf/bin/protoc --plugin=protoc-gen-grpc-java=protobuf/bin/protoc-gen-grpc-java --proto_path=Xray-core --proto_path=protobuf/include --java_out="$release_version/Xray-protobuf-$xray_version" --grpc-java_out="$release_version/Xray-protobuf-$xray_version" {} \;
+            find Xray-core -type f -name *.proto -exec protobuf-xray/bin/protoc --plugin=protoc-gen-grpc-java=./protoc-gen-grpc-java --proto_path=Xray-core --proto_path=protobuf-xray/include --java_out="$release_version/Xray-protobuf-$xray_version" --grpc-java_out="$release_version/Xray-protobuf-$xray_version" {} \;
             mkdir "$release_version/v2ray-protobuf-$v2ray_version"
             git clone -b "$v2ray_version" https://github.com/v2fly/v2ray-core.git
-            find v2ray-core -type f -name *.proto -exec protobuf/bin/protoc --plugin=protoc-gen-grpc-java=protobuf/bin/protoc-gen-grpc-java --proto_path=v2ray-core --proto_path=protobuf/include --java_out="$release_version/v2ray-protobuf-$v2ray_version" --grpc-java_out="$release_version/v2ray-protobuf-$v2ray_version" {} \;
+            find v2ray-core -type f -name *.proto -exec protobuf-v2ray/bin/protoc --plugin=protoc-gen-grpc-java=./protoc-gen-grpc-java --proto_path=v2ray-core --proto_path=protobuf-v2ray/include --java_out="$release_version/v2ray-protobuf-$v2ray_version" --grpc-java_out="$release_version/v2ray-protobuf-$v2ray_version" {} \;
             mkdir "$release_version/geo-assets"
             curl -sL https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geoip.dat -o "$release_version/geo-assets/geoip.dat"
             curl -sL https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geosite.dat -o "$release_version/geo-assets/geosite.dat"
